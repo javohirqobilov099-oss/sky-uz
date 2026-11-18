@@ -1,0 +1,128 @@
+ <!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SkyUz</title>
+  <link rel="icon" type="image/png" href="./img/skyuz-icon-192.png">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @custom-variant dark (&:where(.dark, .dark *));
+    </style>
+    <style>
+      /* Tema almashganda 45 gradusli diagonal parda effekti, tepadan pastga */
+      ::view-transition-old(root) {
+        animation: none;
+      }
+      ::view-transition-new(root) {
+        animation: sky-theme-wipe 1.5s ease-in-out forwards;
+        -webkit-mask-image: linear-gradient(135deg, #000 50%, transparent 50%);
+        mask-image: linear-gradient(135deg, #000 50%, transparent 50%);
+        -webkit-mask-size: 260% 260%;
+        mask-size: 260% 260%;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+      }
+      @keyframes sky-theme-wipe {
+        from { -webkit-mask-position: 0% -160%; mask-position: 0% -160%; }
+        to   { -webkit-mask-position: 0% 160%;  mask-position: 0% 160%; }
+      }
+    </style>
+
+</head>
+<body class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
+
+<header class="sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 pt-[env(safe-area-inset-top,0px)]">
+  <div class="max-w-3xl mx-auto flex items-center justify-between gap-3 px-4 py-3">
+    <div class="font-extrabold text-lg text-blue-600 dark:text-blue-400">✈️ SkyUz</div>
+    <div class="flex items-center gap-2 flex-wrap">
+      <select id="langSel" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-2 text-sm"></select>
+      <button id="themeBtn" class="border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800">🌓</button>
+      <button id="authBtn" class="hidden bg-transparent border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800"></button>
+    </div>
+  </div>
+</header>
+
+<!-- Registration modal -->
+<div id="authOverlay" class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 w-full max-w-sm">
+    <h2 id="authTitle" class="text-lg font-bold mb-3"></h2>
+    <div class="space-y-3">
+      <div>
+        <label id="lblName" class="block text-xs text-slate-500 dark:text-slate-400 mb-1"></label>
+        <input id="regName" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2">
+      </div>
+      <div>
+        <label id="lblPhone" class="block text-xs text-slate-500 dark:text-slate-400 mb-1"></label>
+        <div class="flex border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800">
+          <div class="relative flex-none">
+            <button type="button" id="codeToggle" class="font-semibold text-sm px-3 py-2 whitespace-nowrap hover:bg-slate-100 dark:hover:bg-slate-700 rounded-l-lg">🇺🇿 +998</button>
+            <div id="codeMenu" class="hidden absolute top-full left-0 mt-1 min-w-[230px] max-h-56 overflow-y-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl z-50 p-1"></div>
+          </div>
+          <input id="regPhone" placeholder="90 123 45 67" class="flex-1 bg-transparent px-3 py-2 min-w-0">
+        </div>
+      </div>
+    </div>
+    <button id="regBtn" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-4 py-2"></button>
+    <div id="authMsg" class="hidden mt-3 text-sm rounded-lg px-3 py-2 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300"></div>
+  </div>
+</div>
+
+<main id="mainArea" class="max-w-3xl mx-auto px-4 py-5 pb-16 space-y-4">
+[16.11.2026 17:59] Azizbek: <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
+    <h1 id="h1" class="text-xl font-bold mb-1"></h1>
+    <p id="sub" class="text-slate-500 dark:text-slate-400 mb-4"></p>
+    <div class="grid sm:grid-cols-2 gap-3">
+      <div>
+        <label id="lblFrom" class="block text-xs text-slate-500 dark:text-slate-400 mb-1"></label>
+        <select id="fromSel" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2"></select>
+      </div>
+      <div>
+        <label id="lblTo" class="block text-xs text-slate-500 dark:text-slate-400 mb-1"></label>
+        <select id="toSel" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2"></select>
+      </div>
+      <button id="searchBtn" class="sm:col-span-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-4 py-2"></button>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
+    <h2 id="resultsTitle" class="text-lg font-bold mb-3"></h2>
+    <div id="flightList" class="space-y-2"></div>
+  </div>
+
+  <div id="bookingCard" class="hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
+    <h2 id="bookingTitle" class="text-lg font-bold mb-3"></h2>
+    <div class="grid sm:grid-cols-2 gap-3">
+      <div>
+        <label id="lblPax" class="block text-xs text-slate-500 dark:text-slate-400 mb-1"></label>
+        <input id="paxName" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2">
+      </div>
+      <div>
+        <label id="lblSeat" class="block text-xs text-slate-500 dark:text-slate-400 mb-1"></label>
+        <select id="seatClass" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2"></select>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-4">
+      <button id="confirmBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-4 py-2"></button>
+      <button id="cancelBtn" class="border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800"></button>
+    </div>
+  </div>
+
+  <div id="ticketCard" class="hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
+    <h2 id="ticketTitle" class="text-lg font-bold mb-3"></h2>
+    <div id="ticketBody"></div>
+  </div>
+
+  <div id="myTicketsCard" class="hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
+    <h2 id="myTicketsTitle" class="text-lg font-bold mb-3"></h2>
+    <div id="myTicketsList" class="space-y-2"></div>
+  </div>
+
+</main>
+
+<footer id="footer" class="text-center text-slate-400 text-sm pb-6"></footer>
+
+<script src="script.js"></script>.
+
+</body>
+</html>
